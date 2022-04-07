@@ -1,6 +1,6 @@
 namespace Abacus.Tokens {
-    public class Multiply : Operator {
-        public Multiply() : base(2, Precedence.Multiply) {
+    public class UnaryMinus : Operator {
+        public UnaryMinus() : base(1, Precedence.UnaryMinus) {
         }
 
         public override Operand Evaluate() {

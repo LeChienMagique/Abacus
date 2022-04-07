@@ -1,8 +1,8 @@
 namespace Abacus.Tokens {
     public abstract class Operator : Token {
-        private int arity;
-        private Precedence precedence;
-        private Operand[] operands;
+        protected int arity;
+        protected Precedence precedence;
+        protected Operand[] operands;
 
         public int Arity => arity;
         public Precedence Precedence => precedence;
@@ -12,8 +12,6 @@ namespace Abacus.Tokens {
             this.precedence = precedence;
         }
 
-        public Operand Evaluate() {
-            return null;
-        }
+        public abstract Operand Evaluate();
     }
 }

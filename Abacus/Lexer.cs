@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Abacus.Tokens;
 
 namespace Abacus {
@@ -10,10 +9,13 @@ namespace Abacus {
             this.input = input;
         }
 
-        public Token[] Lex(char seprator = ' ') {
-            string[] splitted = input.Split(seprator);
-            Token[] tokens = new Token[splitted.Length];
-            return tokens;
+        public Token[] Lex() {
+            int i = 0;
+            string token_string = "";
+            while (i < input.Length) {
+            }
+
+            return null;
         }
     }
 }

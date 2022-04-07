@@ -9,6 +9,7 @@ namespace Abacus.Tokens {
         Modulus = 3,
         Exponent = 4,
         UnaryMinus = 5,
+        UnaryPlus = 5,
         FuncCall = 6,
         Grouping = 7
     }

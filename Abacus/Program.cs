@@ -9,7 +9,6 @@ namespace Abacus {
             }
 
             // Console.WriteLine(Console.ReadLine());
-            Environment.Exit(1);
             // Returns an error code of 0, everything went fine!
             return 0;
         }
