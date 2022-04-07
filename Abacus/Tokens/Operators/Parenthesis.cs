@@ -1,4 +1,4 @@
-namespace Abacus.Tokens {
+namespace Abacus.Tokens.Operators {
     public enum State {
         Opening,
         Closing

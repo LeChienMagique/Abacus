@@ -1,4 +1,4 @@
-namespace Abacus.Tokens {
+namespace Abacus.Tokens.Operators {
     public abstract class Operand : Token {
         protected int value;
 
