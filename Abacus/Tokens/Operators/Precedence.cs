@@ -1,4 +1,4 @@
-namespace Abacus.Tokens {
+namespace Abacus.Tokens.Operators {
 	public enum Precedence {
 		Comma      = 0,
 		Assignment = 1,
@@ -8,9 +8,9 @@ namespace Abacus.Tokens {
 		Multiply   = 3,
 		Modulus    = 3,
 		Exponent   = 4,
-		UnaryMinus = 5,
-		UnaryPlus  = 5,
-		FuncCall   = 6,
-		// Grouping = 7
+		FuncCall   = 5,
+		Grouping   = 6,
+		UnaryMinus = 7,
+		UnaryPlus  = 7,
 	}
 }

@@ -17,8 +17,8 @@ namespace Abacus {
 				'/' => new Division(),
 				'^' => new Exponent(),
 				'%' => new Modulus(),
-				'(' => new Parenthesis(State.Opening),
-				')' => new Parenthesis(State.Closing),
+				'(' => new LeftParenthesis(),
+				')' => new RightParenthesis(),
 				_   => throw new UnknownOperatorException($"Unknown operator : {opChar}")
 			};
 		}
@@ -64,7 +64,7 @@ namespace Abacus {
 			return tokens;
 		}
 
-		public static void TransformUnaryOperators(List<Token> tokens) {
+		public static void TransformUnaryOperators(ref List<Token> tokens) {
 			int i = 0;
 			while (i < tokens.Count) {
 				Token token = tokens[i];
@@ -72,13 +72,13 @@ namespace Abacus {
 					// only Minus and Plus can be unary
 					case Minus: {
 						// if after an operator or nothing then it is unary
-						if (i == 0 || tokens[i - 1] is Operator) {
+						if (i == 0 || tokens[i - 1] is Operator && !(tokens[i - 1] is RightParenthesis)) {
 							tokens[i] = new UnaryMinus();
 						}
 						break;
 					}
 					// if unary plus is detected remove it as it has no interaction
-					case Plus when i == 0 || tokens[i - 1] is Operator:
+					case Plus when i == 0 || i == tokens.Count - 1 || tokens[i - 1] is Operator:
 						tokens.RemoveAt(i);
 						continue;
 				}

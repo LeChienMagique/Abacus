@@ -3,7 +3,7 @@ using Abacus.Tokens.Operators;
 
 namespace Abacus.Tokens.UnaryOperators {
 	public abstract class UnaryOperator: Operator {
-		public UnaryOperator(Precedence precedence): base(1, precedence) { }
+		public UnaryOperator(Precedence precedence, string humanReadable): base(1, precedence, humanReadable, Associativity.Right) { }
 
 		public override Operand Evaluate(Operand op1, Operand op2) =>
 			throw new MethodAccessException("Unary operator can't evaluate with 2 operand, use ");

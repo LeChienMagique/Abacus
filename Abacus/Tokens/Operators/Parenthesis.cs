@@ -1,14 +1,14 @@
 namespace Abacus.Tokens.Operators {
-    public enum State {
-        Opening,
-        Closing
-    }
+	public enum State {
+		Opening,
+		Closing
+	}
 
-    public class Parenthesis : Token {
-        public State State;
+	public abstract class Parenthesis: Operator {
+		public State State;
 
-        public Parenthesis(State state) {
-            this.State = state;
-        }
-    }
+		public Parenthesis(State state, string humanReadable): base(0, Precedence.Grouping, humanReadable, Associativity.None) {
+			this.State = state;
+		}
+	}
 }
