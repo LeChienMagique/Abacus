@@ -1,4 +1,6 @@
-namespace Abacus.Tokens.Operators {
+using System.Collections.Generic;
+
+namespace Abacus.Tokens {
 	public abstract class Operand: Token {
 		protected int value;
 
@@ -8,5 +10,7 @@ namespace Abacus.Tokens.Operators {
 			this.value         = value;
 			this.humanReadable = humanReadable;
 		}
+
+		public abstract void Evaluate(Stack<Token> stack);
 	}
 }

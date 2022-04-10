@@ -6,31 +6,23 @@ using Abacus.Tokens.UnaryOperators;
 
 namespace Abacus {
 	public class Interpreter {
-		public static int Interpret(List<Token> rpnInput) {
+		private Dictionary<string, int> context = new Dictionary<string, int>();
+
+		public int Interpret(List<Token> rpnInput) {
 			Stack<Token> outputStack = new Stack<Token>();
 			foreach (Token token in rpnInput) {
 				switch (token) {
-					case Operand:
-						outputStack.Push(token);
+					case Symbol sym :
+						sym.EvaluateSymbol(outputStack, context);
+						break;
+					case Assignment assign:
+						assign.EvaluateAssignment(outputStack, context);
+						break;
+					case Operand op:
+						op.Evaluate(outputStack);
 						break;
 					case Operator op:
-						if (op.Arity == 1) {
-							if (outputStack.Count < 1)
-								throw new ArgumentException($"Not enough operands for operator: `{op.HumanReadable}`");
-							Operand ope = (Operand) outputStack.Pop();
-							outputStack.Push(((UnaryOperator) op).PerformUnaryOperation(ope));
-						}
-						else if (op.Arity == 2) {
-							if (outputStack.Count < 2)
-								throw new ArgumentException($"Not enough operands for operator: `{op.HumanReadable}`");
-							Operand ope2 = (Operand) outputStack.Pop();
-							Operand ope1 = (Operand) outputStack.Pop();
-							outputStack.Push(op.Evaluate(ope1, ope2));
-						}
-						else {
-							throw new
-								NotImplementedException("Unreachable, operators with arity != 2 are not currently implemented.");
-						}
+						op.Evaluate(outputStack);
 						break;
 				}
 			}

@@ -6,15 +6,13 @@ using Abacus.Tokens.Operators;
 
 namespace Abacus {
 	public static class ShuntingYard {
-		public static int foo = 0;
-
 		public static List<Token> ToRpn(List<Token> infixInput) {
 			List<Token>  output  = new List<Token>();
 			Stack<Token> opStack = new Stack<Token>();
 			foreach (Token token in infixInput) {
 				switch (token) {
-					case Number number:
-						output.Add(number);
+					case Operand operand:
+						output.Add(operand);
 						break;
 					case LeftParenthesis:
 						opStack.Push(token);

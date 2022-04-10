@@ -1,4 +1,8 @@
-namespace Abacus.Tokens.Operators {
+using System;
+using System.Collections.Generic;
+using Abacus.Tokens.Operators;
+
+namespace Abacus.Tokens {
 	public abstract class Operator: Token {
 		protected int arity;
 
@@ -18,6 +22,11 @@ namespace Abacus.Tokens.Operators {
 			this.associativity = associativity;
 		}
 
-		public abstract Operand Evaluate(Operand op1, Operand op2);
+		protected void CheckOperandsCount(Stack<Token> tokens) {
+			if (tokens.Count < arity)
+				throw new Exception("Not enough arguments");
+		}
+
+		public abstract void Evaluate(Stack<Token> stack);
 	}
 }

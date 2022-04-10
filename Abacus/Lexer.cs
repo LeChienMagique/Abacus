@@ -19,13 +19,23 @@ namespace Abacus {
 				'%' => new Modulus(),
 				'(' => new LeftParenthesis(),
 				')' => new RightParenthesis(),
+				'=' => new Assignment(),
 				_   => throw new UnknownOperatorException($"Unknown operator : {opChar}")
 			};
 		}
 
+		private static void AddNumberOrSymbol(List<Token> tokens, string tokenString) {
+			int result;
+			if (int.TryParse(tokenString, out result)) {
+				tokens.Add(new Number(result));
+			}
+			else {
+				tokens.Add(new Symbol(tokenString));
+			}
+		}
+
 		public static List<Token> Lex(string input) {
 			/* TODO :
-			 *  - detect unary minus/plus
 			 *  - detect functions
 			 */
 			List<Token> tokens      = new List<Token>();
@@ -36,7 +46,7 @@ namespace Abacus {
 				if (currChar == ' ') {
 					// add number to list
 					if (!string.IsNullOrEmpty(tokenString)) {
-						tokens.Add(new Number(int.Parse(tokenString)));
+						AddNumberOrSymbol(tokens, tokenString);
 						tokenString = "";
 					}
 					i++;
@@ -49,9 +59,16 @@ namespace Abacus {
 					continue;
 				}
 
+				// detect symbols
+				if (char.IsLetter(currChar)) {
+					tokenString += currChar;
+					i++;
+					continue;
+				}
+
 				// add number to list
 				if (!string.IsNullOrEmpty(tokenString)) {
-					tokens.Add(new Number(int.Parse(tokenString)));
+					AddNumberOrSymbol(tokens, tokenString);
 					tokenString = "";
 				}
 
@@ -59,8 +76,10 @@ namespace Abacus {
 				tokens.Add(op);
 				i++;
 			}
-			if (!string.IsNullOrEmpty(tokenString))
-				tokens.Add(new Number(int.Parse(tokenString)));
+
+			if (!string.IsNullOrEmpty(tokenString)) {
+				AddNumberOrSymbol(tokens, tokenString);
+			}
 			return tokens;
 		}
 
