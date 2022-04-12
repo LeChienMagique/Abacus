@@ -13,7 +13,7 @@ namespace Abacus.Tokens.Operators {
 			if (!(op1 is Symbol && op2 is Operand))
 				throw new Exception("Syntax Error");
 			stack.Push(op2);
-			context[((Symbol) op1).HumanReadable] = ((Operand) op2).Value;
+			context[((Symbol) op1).Name] = ((Operand) op2).Value;
 		}
 
 		public override void Evaluate(Stack<Token> stack) => throw new NotImplementedException();

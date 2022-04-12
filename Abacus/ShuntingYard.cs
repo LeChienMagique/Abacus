@@ -11,6 +11,12 @@ namespace Abacus {
 			Stack<Token> opStack = new Stack<Token>();
 			foreach (Token token in infixInput) {
 				switch (token) {
+					case Function func:
+						opStack.Push(func);
+						break;
+					case Symbol sym:
+						output.Add(sym);
+						break;
 					case Operand operand:
 						output.Add(operand);
 						break;
@@ -25,6 +31,8 @@ namespace Abacus {
 							throw new MismatchedParenthesesException("Mismatched parentheses.");
 						opStack.Pop();
 						// TODO : function part of algorithm
+						if (opStack.Peek() is Function)
+							output.Add(opStack.Pop());
 						break;
 					case Operator op1:
 						while (opStack.Count > 0) {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Abacus.Exceptions;
 using Abacus.Tokens;
+using Abacus.Tokens.NativeFunctions;
 using Abacus.Tokens.Operators;
 using Abacus.Tokens.UnaryOperators;
 
@@ -24,10 +25,33 @@ namespace Abacus {
 			};
 		}
 
-		private static void AddNumberOrSymbol(List<Token> tokens, string tokenString) {
+		private static List<string> nativeFunctions = new List<string>()
+			{"facto", "sqrt", "max", "min", "isprime", "fibo", "gcd"};
+
+		private static bool IsFunction(string tokenString) {
+			return nativeFunctions.Contains(tokenString);
+		}
+
+		private static Function GetCorrespondingFunction(string funcName) {
+			return funcName switch {
+				"facto"   => new Facto(),
+				"sqrt"    => new Sqrt(),
+				"max"     => new Max(),
+				"min"     => new Min(),
+				"isprime" => new IsPrime(),
+				"fibo"    => new Fibonnacci(),
+				"gcd"     => new Gcd(),
+				_         => throw new NotImplementedException()
+			};
+		}
+
+		private static void AddTokenFromString(List<Token> tokens, string tokenString) {
 			int result;
 			if (int.TryParse(tokenString, out result)) {
 				tokens.Add(new Number(result));
+			}
+			else if (IsFunction(tokenString)) {
+				tokens.Add(GetCorrespondingFunction(tokenString));
 			}
 			else {
 				tokens.Add(new Symbol(tokenString));
@@ -43,10 +67,10 @@ namespace Abacus {
 			string      tokenString = "";
 			while (i < input.Length) {
 				char currChar = input[i];
-				if (currChar == ' ') {
+				if (currChar == ' ' || currChar == ',') {
 					// add number to list
 					if (!string.IsNullOrEmpty(tokenString)) {
-						AddNumberOrSymbol(tokens, tokenString);
+						AddTokenFromString(tokens, tokenString);
 						tokenString = "";
 					}
 					i++;
@@ -60,7 +84,7 @@ namespace Abacus {
 				}
 
 				// detect symbols
-				if (char.IsLetter(currChar)) {
+				if (char.IsLetter(currChar) || currChar == '_') {
 					tokenString += currChar;
 					i++;
 					continue;
@@ -68,7 +92,7 @@ namespace Abacus {
 
 				// add number to list
 				if (!string.IsNullOrEmpty(tokenString)) {
-					AddNumberOrSymbol(tokens, tokenString);
+					AddTokenFromString(tokens, tokenString);
 					tokenString = "";
 				}
 
@@ -78,7 +102,7 @@ namespace Abacus {
 			}
 
 			if (!string.IsNullOrEmpty(tokenString)) {
-				AddNumberOrSymbol(tokens, tokenString);
+				AddTokenFromString(tokens, tokenString);
 			}
 			return tokens;
 		}

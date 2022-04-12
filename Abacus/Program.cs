@@ -28,16 +28,12 @@ namespace Abacus {
 				}
 
 				// foreach (Token token in rpnNotation) {
-				// 	if (token is Operand)
-				// 		Console.Write(((Operand) token).HumanReadable + " ");
-				// 	if (token is Operator)
-				// 		Console.Write(((Operator) token).HumanReadable + " ");
+				// 	Console.Write(token.HumanReadable + " ");
 				// }
 				// Console.WriteLine("\n===========");
 				lastResult = interpreter.Interpret(rpnNotation);
 			}
 			Console.WriteLine(lastResult);
-			// Console.WriteLine(Console.ReadLine());
 			// Returns an error code of 0, everything went fine!
 			return 0;
 		}

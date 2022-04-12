@@ -12,7 +12,7 @@ namespace Abacus {
 			Stack<Token> outputStack = new Stack<Token>();
 			foreach (Token token in rpnInput) {
 				switch (token) {
-					case Symbol sym :
+					case Symbol sym:
 						sym.EvaluateSymbol(outputStack, context);
 						break;
 					case Assignment assign:
@@ -24,13 +24,13 @@ namespace Abacus {
 					case Operator op:
 						op.Evaluate(outputStack);
 						break;
+					default:
+						throw new Exception("unreachable");
 				}
 			}
 			if (outputStack.Count == 0)
 				throw new Exception("Too much tokens were consumed, sus.");
 			if (outputStack.Count > 1) {
-				while (outputStack.Count > 0)
-					Console.Write(outputStack.Pop().HumanReadable + " | ");
 				throw new Exception("Some tokens were not consumed while interpreting, sus.");
 			}
 			Token result = outputStack.Pop();
