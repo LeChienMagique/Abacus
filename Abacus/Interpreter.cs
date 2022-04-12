@@ -21,6 +21,9 @@ namespace Abacus {
 					case Operand op:
 						op.Evaluate(outputStack);
 						break;
+					case UnaryOperator unOp:
+						unOp.PerformUnaryOperation(outputStack);
+						break;
 					case Operator op:
 						op.Evaluate(outputStack);
 						break;
@@ -31,6 +34,9 @@ namespace Abacus {
 			if (outputStack.Count == 0)
 				throw new Exception("Too much tokens were consumed, sus.");
 			if (outputStack.Count > 1) {
+				foreach (Token token in outputStack) {
+					Console.Write(token.HumanReadable + " | ");
+				}
 				throw new Exception("Some tokens were not consumed while interpreting, sus.");
 			}
 			Token result = outputStack.Pop();

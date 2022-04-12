@@ -27,10 +27,10 @@ namespace Abacus {
 					rpnNotation = tokens;
 				}
 
-				// foreach (Token token in rpnNotation) {
-				// 	Console.Write(token.HumanReadable + " ");
-				// }
-				// Console.WriteLine("\n===========");
+				foreach (Token token in rpnNotation) {
+					Console.Write(token.HumanReadable + " ");
+				}
+				Console.WriteLine("\n===========");
 				lastResult = interpreter.Interpret(rpnNotation);
 			}
 			Console.WriteLine(lastResult);

@@ -31,7 +31,7 @@ namespace Abacus {
 							throw new MismatchedParenthesesException("Mismatched parentheses.");
 						opStack.Pop();
 						// TODO : function part of algorithm
-						if (opStack.Peek() is Function)
+						if (opStack.Count > 0 && opStack.Peek() is Function)
 							output.Add(opStack.Pop());
 						break;
 					case Operator op1:

@@ -121,7 +121,8 @@ namespace Abacus {
 						break;
 					}
 					// if unary plus is detected remove it as it has no interaction
-					case Plus when i == 0 || i == tokens.Count - 1 || tokens[i - 1] is Operator:
+					case Plus when i == 0 || i == tokens.Count - 1 ||
+					               tokens[i - 1] is Operator && !(tokens[i - 1] is RightParenthesis):
 						tokens.RemoveAt(i);
 						continue;
 				}

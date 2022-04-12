@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace Abacus.Tokens {
 	public abstract class Operand: Token {
-		protected int value;
+		private int value;
 
 		public int Value => value;
 
@@ -12,5 +12,7 @@ namespace Abacus.Tokens {
 		}
 
 		public abstract void Evaluate(Stack<Token> stack);
+
+		public void NegateValue() => value = -value;
 	}
 }

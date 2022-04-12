@@ -1,15 +1,16 @@
 using System;
+using System.Collections.Generic;
 using Abacus.Tokens.Operators;
 
 namespace Abacus.Tokens.UnaryOperators {
 	public class UnaryPlus: UnaryOperator {
 		public UnaryPlus(): base(Precedence.UnaryPlus, "+") { }
 
-		public override Operand PerformUnaryOperation(Operand operand) {
-			// TODO : when variables will be here treat them aswell
-			if (operand is Number)
-				return new Number(operand.Value);
-			throw new NotImplementedException("Not implemented for Operand other than Number");
+		public override void PerformUnaryOperation(Stack<Token> stack) {
+			Token op = stack.Pop();
+			if (!(op is Operand))
+				throw new Exception("Syntax Error unary before something other than an Operand");
+			stack.Push(op);
 		}
 	}
 }
