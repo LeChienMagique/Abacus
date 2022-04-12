@@ -59,9 +59,6 @@ namespace Abacus {
 		}
 
 		public static List<Token> Lex(string input) {
-			/* TODO :
-			 *  - detect functions
-			 */
 			List<Token> tokens      = new List<Token>();
 			int         i           = 0;
 			string      tokenString = "";

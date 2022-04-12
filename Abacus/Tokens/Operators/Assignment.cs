@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Abacus.Exceptions;
 
 namespace Abacus.Tokens.Operators {
 	public class Assignment: Operator {
@@ -11,7 +12,7 @@ namespace Abacus.Tokens.Operators {
 			Token op2 = stack.Pop();
 			Token op1 = stack.Pop();
 			if (!(op1 is Symbol && op2 is Operand))
-				throw new Exception("Syntax Error");
+				throw new SyntaxErrorException("Syntax Error");
 			stack.Push(op2);
 			context[((Symbol) op1).Name] = ((Operand) op2).Value;
 		}

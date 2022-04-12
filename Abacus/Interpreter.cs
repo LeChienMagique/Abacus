@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using Abacus.Tokens;
 using Abacus.Tokens.Operators;
 using Abacus.Tokens.UnaryOperators;
+using SyntaxErrorException = Abacus.Exceptions.SyntaxErrorException;
 
 namespace Abacus {
 	public class Interpreter {
@@ -32,16 +34,16 @@ namespace Abacus {
 				}
 			}
 			if (outputStack.Count == 0)
-				throw new Exception("Too much tokens were consumed, sus.");
+				throw new SyntaxErrorException("Too much tokens were consumed, sus.");
 			if (outputStack.Count > 1) {
-				foreach (Token token in outputStack) {
-					Console.Write(token.HumanReadable + " | ");
-				}
-				throw new Exception("Some tokens were not consumed while interpreting, sus.");
+				// foreach (Token token in outputStack) {
+				// 	Console.Write(token.HumanReadable + " | ");
+				// }
+				throw new SyntaxErrorException("Some tokens were not consumed while interpreting, sus.");
 			}
 			Token result = outputStack.Pop();
 			if (!(result is Operand))
-				throw new Exception($"Expected an operand to be left on stack but got: {result.GetType()}");
+				throw new SyntaxErrorException($"Expected an operand to be left on stack but got: {result.GetType()}");
 			return ((Operand) result).Value;
 		}
 	}

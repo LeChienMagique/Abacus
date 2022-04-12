@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Abacus.Exceptions;
 using Abacus.Tokens.Operators;
 
 namespace Abacus.Tokens {
@@ -24,7 +25,27 @@ namespace Abacus.Tokens {
 
 		protected void CheckOperandsCount(Stack<Token> tokens) {
 			if (tokens.Count < arity)
-				throw new Exception("Not enough arguments");
+				throw new SyntaxErrorException("Not enough arguments");
+		}
+
+		private void CheckArg(Token tok) {
+			if (tok is Symbol)
+				throw new UnboundVariableException();
+			if (!(tok is Operand))
+				throw new SyntaxErrorException();
+		}
+
+		protected void CheckInvalidArguments(Token tok) => CheckArg(tok);
+
+		protected void CheckInvalidArguments(Token tok1, Token tok2) {
+			CheckArg(tok1);
+			CheckArg(tok2);
+		}
+
+		protected void CheckInvalidArguments(List<Token> args) {
+			foreach (Token tok in args) {
+				CheckArg(tok);
+			}
 		}
 
 		public abstract void Evaluate(Stack<Token> stack);

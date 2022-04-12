@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Abacus.Tokens.Operators;
 
 namespace Abacus.Tokens {
 	public class Variable: Operand {

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Abacus.Exceptions;
 using Abacus.Tokens.Operators;
 
 namespace Abacus.Tokens.NativeFunctions {
@@ -9,9 +10,7 @@ namespace Abacus.Tokens.NativeFunctions {
 		public override void Evaluate(Stack<Token> stack) {
 			CheckOperandsCount(stack);
 			Token op = stack.Pop();
-			if (!(op is Operand)) {
-				throw new Exception("Syntax Error");
-			}
+			CheckInvalidArguments(op);
 			int value  = ((Operand) op).Value;
 			int result = 1;
 			for (; value > 1 ; value--)

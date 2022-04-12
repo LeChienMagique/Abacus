@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Abacus.Exceptions;
 
 namespace Abacus.Tokens.Operators {
 	public class Modulus: Operator {
@@ -9,8 +10,7 @@ namespace Abacus.Tokens.Operators {
 			CheckOperandsCount(stack);
 			Token op2 = stack.Pop();
 			Token op1 = stack.Pop();
-			if (!(op1 is Operand && op2 is Operand))
-				throw new Exception("Syntax Error");
+			CheckInvalidArguments(op1, op2);
 			stack.Push(new Number(((Operand)op1).Value % ((Operand)op2).Value));
 		}
 	}
