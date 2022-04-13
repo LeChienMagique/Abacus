@@ -5,7 +5,7 @@ using Abacus.Tokens.Operators;
 
 namespace Abacus.Tokens.UnaryOperators {
 	public class UnaryMinus: UnaryOperator {
-		public UnaryMinus(): base(Precedence.UnaryMinus, "-") { }
+		public UnaryMinus(): base(Precedence.UnaryMinus, "u-") { }
 
 		public override void PerformUnaryOperation(Stack<Token> stack) {
 			CheckOperandsCount(stack);

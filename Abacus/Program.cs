@@ -30,6 +30,7 @@ namespace Abacus {
 				List<Token> rpnNotation;
 				if (!rpnMode) {
 					Lexer.TransformUnaryOperators(ref tokens);
+					Lexer.TransformImplicitMult(ref tokens);
 					rpnNotation = ShuntingYard.ToRpn(tokens);
 				}
 				else {
@@ -37,7 +38,7 @@ namespace Abacus {
 				}
 
 				// foreach (Token token in rpnNotation) {
-				// Console.Write(token.HumanReadable + " ");
+				// 	Console.Write(token.HumanReadable + " ");
 				// }
 				// Console.WriteLine("\n===========");
 				lastResult = interpreter.Interpret(rpnNotation);
@@ -59,7 +60,10 @@ namespace Abacus {
 						Console.Error.WriteLine("Invalid operation.");
 						System.Environment.Exit(3);
 						break;
+					case MismatchedParenthesesException:
 					case SyntaxErrorException:
+						// Console.WriteLine(e.Message);
+						// Console.WriteLine(e.StackTrace);
 						Console.Error.WriteLine("Syntax error.");
 						System.Environment.Exit(2);
 						break;
@@ -72,7 +76,6 @@ namespace Abacus {
 						System.Environment.Exit(3);
 						break;
 					default:
-						// Console.WriteLine(e.Message);
 						Console.Error
 						       .WriteLine("??? Congrats, you broke the application! Just kidding, this case is just not implemented.");
 						System.Environment.Exit(-1);

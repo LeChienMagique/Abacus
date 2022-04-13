@@ -6,6 +6,7 @@ using Abacus.Tokens;
 using Abacus.Tokens.NativeFunctions;
 using Abacus.Tokens.Operators;
 using Abacus.Tokens.UnaryOperators;
+using ArithmeticException = Abacus.Exceptions.ArithmeticException;
 
 namespace Abacus {
 	public static class Lexer {
@@ -21,6 +22,7 @@ namespace Abacus {
 				'(' => new LeftParenthesis(),
 				')' => new RightParenthesis(),
 				'=' => new Assignment(),
+				',' => new Comma(),
 				_   => throw new UnknownOperatorException($"Unknown operator : {opChar}")
 			};
 		}
@@ -59,38 +61,56 @@ namespace Abacus {
 		}
 
 		public static List<Token> Lex(string input) {
-			List<Token> tokens      = new List<Token>();
-			int         i           = 0;
-			string      tokenString = "";
+			List<Token> tokens       = new List<Token>();
+			int         i            = 0;
+			string      numberString = "";
+			string      symbolString = "";
 			while (i < input.Length) {
 				char currChar = input[i];
-				if (currChar == ' ' || currChar == ',') {
+				if (currChar == ' ') {
 					// add number to list
-					if (!string.IsNullOrEmpty(tokenString)) {
-						AddTokenFromString(tokens, tokenString);
-						tokenString = "";
+					if (!string.IsNullOrEmpty(numberString)) {
+						AddTokenFromString(tokens, numberString);
+						numberString = "";
 					}
-					i++;
-					continue;
-				}
-				// detect number
-				if (char.IsDigit(currChar)) {
-					tokenString += currChar;
+					else if (!string.IsNullOrEmpty(symbolString)) {
+						AddTokenFromString(tokens, symbolString);
+						symbolString = "";
+					}
 					i++;
 					continue;
 				}
 
 				// detect symbols
-				if (char.IsLetter(currChar) || currChar == '_') {
-					tokenString += currChar;
+				if (symbolString.Length == 0) {
+					if (char.IsLetter(currChar) || currChar == '_') {
+						symbolString += currChar;
+						i++;
+						continue;
+					}
+				}
+				else {
+					if (char.IsLetterOrDigit(currChar) || currChar == '_') {
+						symbolString += currChar;
+						i++;
+						continue;
+					}
+				}
+
+				// detect number
+				if (char.IsDigit(currChar)) {
+					numberString += currChar;
 					i++;
 					continue;
 				}
 
-				// add number to list
-				if (!string.IsNullOrEmpty(tokenString)) {
-					AddTokenFromString(tokens, tokenString);
-					tokenString = "";
+				if (!string.IsNullOrEmpty(numberString)) {
+					AddTokenFromString(tokens, numberString);
+					numberString = "";
+				}
+				if (!string.IsNullOrEmpty(symbolString)) {
+					AddTokenFromString(tokens, symbolString);
+					symbolString = "";
 				}
 
 				Token op = GetCorrespondingToken(currChar);
@@ -98,8 +118,11 @@ namespace Abacus {
 				i++;
 			}
 
-			if (!string.IsNullOrEmpty(tokenString)) {
-				AddTokenFromString(tokens, tokenString);
+			if (!string.IsNullOrEmpty(numberString)) {
+				AddTokenFromString(tokens, numberString);
+			}
+			if (!string.IsNullOrEmpty(symbolString)) {
+				AddTokenFromString(tokens, symbolString);
 			}
 			return tokens;
 		}
@@ -125,6 +148,25 @@ namespace Abacus {
 				}
 				i++;
 			}
+		}
+
+		public static void TransformImplicitMult(ref List<Token> tokens) {
+			List<Token> transformed = new List<Token>();
+			int         i           = 0;
+			while (i < tokens.Count) {
+				Token token = tokens[i];
+				if (token is Number) {
+					if (i < tokens.Count - 1) {
+						if (tokens[i + 1] is LeftParenthesis || tokens[i + 1] is Symbol) {
+							transformed.Add(new Multiply());
+						}
+					}
+				}
+				transformed.Add(token);
+				i++;
+			}
+			tokens.Clear();
+			tokens.AddRange(transformed);
 		}
 	}
 }

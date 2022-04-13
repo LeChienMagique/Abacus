@@ -11,6 +11,6 @@ namespace Abacus.Tokens.Operators {
 		FuncCall   = 5,
 		Grouping   = 6,
 		UnaryMinus = 7,
-		UnaryPlus  = 7,
+		UnaryPlus  = 7
 	}
 }
