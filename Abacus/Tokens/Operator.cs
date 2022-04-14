@@ -24,8 +24,13 @@ namespace Abacus.Tokens {
 		}
 
 		protected void CheckOperandsCount(Stack<Token> tokens) {
-			if (tokens.Count < arity)
-				throw new SyntaxErrorException("Not enough arguments");
+			if (tokens.Count < arity) {
+				foreach (Token token in tokens) {
+					Console.WriteLine(token.HumanReadable);
+				}
+
+				throw new SyntaxErrorException($"Not enough arguments for operator : {humanReadable}");
+			}
 		}
 
 		private void CheckArg(Token tok) {

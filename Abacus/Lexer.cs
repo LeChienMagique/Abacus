@@ -23,7 +23,7 @@ namespace Abacus {
                 ')' => new RightParenthesis(),
                 '=' => new Assignment(),
                 ',' => new Comma(),
-                _ => throw new UnknownOperatorException($"Unknown operator : {opChar}")
+                _ => throw new UnknownTokenException()
             };
         }
 
@@ -43,7 +43,7 @@ namespace Abacus {
                 "isprime" => new IsPrime(),
                 "fibo" => new Fibonnacci(),
                 "gcd" => new Gcd(),
-                _ => throw new NotImplementedException()
+                _ => throw new UnknownTokenException()
             };
         }
 
@@ -60,7 +60,7 @@ namespace Abacus {
             }
         }
 
-        public static List<Token> Lex(string input) {
+        private static List<Token> _Lex(string input) {
             List<Token> tokens = new List<Token>();
             int i = 0;
             string numberString = "";
@@ -131,7 +131,7 @@ namespace Abacus {
             return tokens;
         }
 
-        public static void TransformUnaryOperators(ref List<Token> tokens) {
+        private static List<Token> TransformUnaryOperators(List<Token> tokens) {
             int i = 0;
             while (i < tokens.Count) {
                 Token token = tokens[i];
@@ -156,9 +156,11 @@ namespace Abacus {
 
                 i++;
             }
+
+            return tokens;
         }
 
-        public static void TransformImplicitMult(ref List<Token> tokens) {
+        private static List<Token> TransformImplicitMult(List<Token> tokens) {
             List<Token> transformed = new List<Token>();
             int i = 0;
             while (i < tokens.Count) {
@@ -175,8 +177,15 @@ namespace Abacus {
                 i++;
             }
 
-            tokens.Clear();
-            tokens.AddRange(transformed);
+            return transformed;
+        }
+
+        public static List<Token> Lex(string input, bool rpnMode) {
+            if (!rpnMode) {
+                return TransformImplicitMult(TransformUnaryOperators(_Lex(input)));
+            }
+
+            return _Lex(input);
         }
     }
 }
