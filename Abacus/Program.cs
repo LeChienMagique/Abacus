@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Abacus.Bonus;
 using Abacus.Exceptions;
 using Abacus.Tokens;
 using Abacus.Tokens.Operators;
@@ -9,12 +10,26 @@ using SyntaxErrorException = Abacus.Exceptions.SyntaxErrorException;
 
 namespace Abacus {
     public static class Program {
-        private static string[] validArgs = new[] { "--rpn" };
+        private static string[] validBonusArgs = { "REPR" };
 
-        public static void _Main(string[] args) {
+        private static void _Main(string[] args) {
             bool rpnMode = false;
+            bool replMode = false;
             for (int i = 0; i < args.Length; ++i) {
-                if (validArgs.Contains(args[i])) {
+                if (args[i].StartsWith("--additionals=")) {
+                    string[] bonusArgs = args[i].Remove(0, 14).Split(",");
+                    foreach (string bonusArg in bonusArgs) {
+                        switch (bonusArg) {
+                            case "REPL":
+                                replMode = true;
+                                break;
+                            default:
+                                throw new UnknownArgumentException();
+                        }
+                    }
+                }
+
+                if (args[i] != "--rpn") {
                     // TODO : works for now
                     rpnMode = true;
                 }
@@ -23,6 +38,15 @@ namespace Abacus {
                 }
             }
 
+            if (replMode) {
+                Repl.Run();
+            }
+            else {
+                EvaluateExpression(rpnMode);
+            }
+        }
+
+        private static void EvaluateExpression(bool rpnMode) {
             string input = Console.ReadLine();
             Interpreter interpreter = new Interpreter();
             int? lastResult = new int();
@@ -51,6 +75,7 @@ namespace Abacus {
             Console.WriteLine(lastResult);
         }
 
+
         public static int Main(string[] args) {
             try {
                 _Main(args);
@@ -63,13 +88,13 @@ namespace Abacus {
                         break;
                     case MismatchedParenthesesException:
                     case SyntaxErrorException:
-                        Console.WriteLine(e.Message);
-                        Console.WriteLine(e.StackTrace);
+                        // Console.WriteLine(e.Message);
+                        // Console.WriteLine(e.StackTrace);
                         Console.Error.WriteLine("Syntax error.");
                         System.Environment.Exit(2);
                         break;
                     case UnknownArgumentException argExc:
-                        Console.Error.WriteLine(argExc.Message);
+                        Console.Error.WriteLine("Unknown argument.");
                         System.Environment.Exit(1);
                         break;
                     case UnboundVariableException:
