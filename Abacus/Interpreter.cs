@@ -45,9 +45,9 @@ namespace Abacus {
 			Token result = outputStack.Pop();
 			if (result is Symbol)
 				throw new UnboundVariableException();
-			if (!(result is Operand))
+			if (!(result is Operand operand))
 				throw new SyntaxErrorException($"Expected an operand to be left on stack but got: {result.GetType()}");
-			return ((Operand) result).Value;
+			return operand.Value;
 		}
 	}
 }
