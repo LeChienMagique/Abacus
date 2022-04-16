@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using Abacus.Bonus;
 using Abacus.Exceptions;
 using Abacus.Tokens;
 using Abacus.Tokens.Operators;
@@ -9,17 +10,22 @@ using SyntaxErrorException = Abacus.Exceptions.SyntaxErrorException;
 
 namespace Abacus {
 	public class Interpreter {
-		private Dictionary<string, int> context = new Dictionary<string, int>();
+		public  Dictionary<string, int>      Context          = new Dictionary<string, int>();
+		private Dictionary<string, Function> definedFunctions = new Dictionary<string, Function>();
 
 		public int Interpret(List<Token> rpnInput) {
 			Stack<Token> outputStack = new Stack<Token>();
 			foreach (Token token in rpnInput) {
 				switch (token) {
+					case FunctionDefinition funcDef:
+						funcDef.EvaluateFunctionDefinition(definedFunctions);
+						outputStack.Push(new FuncDefEnd());
+						break;
 					case Symbol sym:
-						sym.EvaluateSymbol(outputStack, context);
+						sym.EvaluateSymbol(outputStack, Context, definedFunctions);
 						break;
 					case Assignment assign:
-						assign.EvaluateAssignment(outputStack, context);
+						assign.EvaluateAssignment(outputStack, Context);
 						break;
 					case Operand op:
 						op.Evaluate(outputStack);
@@ -45,6 +51,9 @@ namespace Abacus {
 			Token result = outputStack.Pop();
 			if (result is Symbol)
 				throw new UnboundVariableException();
+			if (result is FuncDefEnd) {
+				return 0;
+			}
 			if (!(result is Operand operand))
 				throw new SyntaxErrorException($"Expected an operand to be left on stack but got: {result.GetType()}");
 			return operand.Value;

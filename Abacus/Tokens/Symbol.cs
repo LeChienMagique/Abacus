@@ -12,12 +12,18 @@ namespace Abacus.Tokens {
 			name          = value;
 		}
 
-		public void EvaluateSymbol(Stack<Token> stack, Dictionary<string, int> context) {
-			if (!context.ContainsKey(Name)) {
-				stack.Push(this);
-				return;
+		public void EvaluateSymbol(Stack<Token> stack,
+		                           Dictionary<string, int> context,
+		                           Dictionary<string, Function> funcContext) {
+			if (context.ContainsKey(Name)) {
+				stack.Push(new Variable(context[Name], Name));
 			}
-			stack.Push(new Variable(context[Name], Name));
+			else if (funcContext.ContainsKey(Name)) {
+				stack.Push(funcContext[Name]);
+			}
+			else {
+				stack.Push(this);
+			}
 		}
 	}
 }
