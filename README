@@ -1,1 +1,9 @@
-Bonus : REPL mode and function definition ("#f(x) = 3x" for example)
+Bonus :
+- REPL mode
+- function definition
+
+For REPL mode `--additionals=REPL`. REPL mode is just a REPL mode for Abacus. Doesn't support rpn mode.
+
+For function definition `--additionals=FUNCDEF`. FUNCDEF adds function definition. You can define a function with the operator `#` immediately followed by the name of the function, and then followed by the arguments wrapped in parenthesis and comma-separated, after just put `=` and the function expression (e.g "#f(x, y) = x + y"). You cannot redefine a function. You can use functions in function definition but no recursion.
+
+FUNCDEF is compatible with REPL.
